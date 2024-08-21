@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    {% if errorEmprestimo %}
+        <script type="text/javascript">
+            alert("{{ errorEmprestimo }}");
+        </script>
+    {% endif %}
+
+    {% if errorDevolucao %}
+        <script type="text/javascript">
+            alert("{{ errorDevolucao }}");
+        </script>
+    {% endif %}
+
+    {% if errorCadastroUsuario %}
+        <script type="text/javascript">
+            alert("{{ errorCadastroUsuario }}");
+        </script>
+    {% endif %}
+
+    <div class="container">
+        <h1 style="text-align: center; color: aliceblue; font-size: 60px;">B I B L I O T E C A</h1>
+        
+        <div class="section-container">
+            <div class="title-div">
+                <h1>Empréstimo</h1>
+                <p>*Esta sessão é exclusiva para registro de empréstimos de livros</p>
+            </div>
+            <div class="form-div">
+                <form style="display: flex;width: 100%; justify-content: space-around;" action="/emprestimo" method='post'>
+                    <input type="text" id="inputISBN" name="inputISBN" placeholder="ISBN" required>
+                    <input type="text" name="inputTitulo" placeholder="Título" required>
+                    <input type="text" name="inputAutor" placeholder="Autor" required>
+                    <input type="text" name="inputUsuario" placeholder="Nome do Usuário" required>
+                    <input style="margin: 0;" type="submit" value="OK">
+                </form>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="title-div">
+                <h1>Devolução</h1>
+                <p>*Esta sessão é exclusiva para registro de devolução de livros</p>
+            </div>
+            <div class="form-div">
+                <form style="display: flex;width: 100%; justify-content: space-around; height: 100px;" action="/devolucao" method='post'>
+                    <input type="text" id="inputISBN" name="inputISBN" placeholder="ISBN" required>
+                    <input style="margin: 0;background-color: red;" type="submit" value="OK">
+                    <div class="total">
+                        {% if multa is not none %}
+                            <h2 id="multa" >Multa: R$ {{ multa }}</h2>
+                        {% endif %}
+                    </div>
+                </form>
+                <button id="btn-pago" style="padding: 10px; background-color: green; color: white; margin-right: 30px; cursor: pointer; font-size: 25px;">Pago</button>
+            </div>
+        </div>
+
+        <div class="section-container2">
+            <div id="historico">
+                <div class="title-div">
+                    <h1>Histórico</h1>
+                    <p>Consulte o histórico de empréstimos e devoluções de livros</p>
+                </div>
+                <div class="table_container">
+                    <table id="historico-table" class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ISBN</th>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Usuário</th>
+                                <th>Data de Empréstimo</th>
+                                <th>Data de Devolução</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="usuarios" style="text-align: center;">
+                <div class="header">
+                    <h1>Usuários</h1>
+                    <p>Consulte e cadastre usuários</p>
+                    <form action="/usuarios" method="post">
+                        <input type="text" id="inputNome" name="inputNome" placeholder="Nome" required>
+                        <input type="email" id="inputEmail" name="inputEmail" placeholder="Email" required><br>
+                        <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
+                    </form>
+                </div>
+                <div class="table-container" style="overflow: auto; height: 350px;">
+                    <table id="usuarios-table" class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Função para carregar dados do histórico
+        function loadHistorico() {
+            $.get("/historico_data", function (data) {
+                $("#historico-table tbody").empty();
+                data.forEach(function (row) {
+                    var newRow = "<tr><td>" + row.id + "</td><td>" +
+                        row.isbn + "</td><td>" + 
+                        row.titulo + "</td><td>" + 
+                        row.autor + "</td><td>" + 
+                        row.usuario + "</td><td>" + 
+                        row.data_emprestimo + "</td><td>" + 
+                        (row.data_devolucao ? row.data_devolucao : "") + "</td></tr>";
+                    $("#historico-table tbody").append(newRow);
+                });
+            });
+        }
+
+        // Função para carregar dados dos usuários
+        function loadUsuarios() {
+            $.get("/usuarios_data", function (data) {
+                $("#usuarios-table tbody").empty();
+                data.forEach(function (row) {
+                    var newRow = "<tr><td>" + row.id + "</td><td>" +
+                        row.nome + "</td><td>" +
+                        row.email + "</td></tr>";
+                    $('#usuarios-table tbody').append(newRow);
+                });
+            });
+        }
+
+        // Carregamento inicial
+        loadHistorico();
+        loadUsuarios();
+
+        document.getElementById("btn-pago").addEventListener("click", function() {
+            document.getElementById("multa").innerText = "";
+        });
+    </script>
+</body>
+</html>
