@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.static_folder = 'static'
 
 app.config["MYSQL_USER"] = "root"
-app.config["MYSQL_PASSWORD"] = "jv23696406"
+app.config["MYSQL_PASSWORD"] = "impacta123"
 app.config["MYSQL_DB"] = "biblioteca"
 
 mysql = MySQL(app)
