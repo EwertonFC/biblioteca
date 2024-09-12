@@ -27,93 +27,99 @@
     {% endif %}
 
     <div class="container">
-        <h1 style="text-align: center; color: aliceblue; font-size: 60px;">B I B L I O T E C A</h1>
+        <header>
+            <h1 class="title-main">Biblioteca</h1>
+        </header>
         
+        <!-- Sessão de Empréstimo -->
         <div class="section-container">
             <div class="title-div">
-                <h1>Empréstimo</h1>
+                <h2>Empréstimo</h2>
                 <p>*Esta sessão é exclusiva para registro de empréstimos de livros</p>
             </div>
             <div class="form-div">
-                <form style="display: flex;width: 100%; justify-content: space-around;" action="/emprestimo" method='post'>
+                <form class="form-emprestimo" action="/emprestimo" method='post'>
                     <input type="text" id="inputISBN" name="inputISBN" placeholder="ISBN" required>
                     <input type="text" name="inputTitulo" placeholder="Título" required>
                     <input type="text" name="inputAutor" placeholder="Autor" required>
                     <input type="text" name="inputUsuario" placeholder="Nome do Usuário" required>
-                    <input style="margin: 0;" type="submit" value="OK">
+                    <input class="btn-submit" type="submit" value="OK">
                 </form>
             </div>
         </div>
 
+        <!-- Sessão de Devolução -->
         <div class="section-container">
             <div class="title-div">
-                <h1>Devolução</h1>
+                <h2>Devolução</h2>
                 <p>*Esta sessão é exclusiva para registro de devolução de livros</p>
             </div>
             <div class="form-div">
-                <form style="display: flex;width: 100%; justify-content: space-around; height: 100px;" action="/devolucao" method='post'>
+                <form class="form-devolucao" action="/devolucao" method='post'>
                     <input type="text" id="inputISBN" name="inputISBN" placeholder="ISBN" required>
-                    <input style="margin: 0;background-color: red;" type="submit" value="OK">
+                    <input class="btn-submit btn-red" type="submit" value="OK">
                     <div class="total">
                         {% if multa is not none %}
-                            <h2 id="multa" >Multa: R$ {{ multa }}</h2>
+                            <h3 id="multa" class="multa-text">Multa: R$ {{ multa }}</h3>
                         {% endif %}
                     </div>
                 </form>
-                <button id="btn-pago" style="padding: 10px; background-color: green; color: white; margin-right: 30px; cursor: pointer; font-size: 25px;">Pago</button>
+                <button id="btn-pago" class="btn-pago">Pago</button>
             </div>
         </div>
 
-        <div class="section-container2">
-            <div id="historico">
-                <div class="title-div">
-                    <h1>Histórico</h1>
-                    <p>Consulte o histórico de empréstimos e devoluções de livros</p>
-                </div>
-                <div class="table_container">
-                    <table id="historico-table" class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>ISBN</th>
-                                <th>Título</th>
-                                <th>Autor</th>
-                                <th>Usuário</th>
-                                <th>Data de Empréstimo</th>
-                                <th>Data de Devolução</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+        <!-- Histórico -->
+        <div class="section-container">
+            <div class="title-div">
+                <h2>Histórico</h2>
+                <p>Consulte o histórico de empréstimos e devoluções de livros</p>
             </div>
+            <div class="table-container">
+                <table id="historico-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ISBN</th>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>Usuário</th>
+                            <th>Data de Empréstimo</th>
+                            <th>Data de Devolução</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
 
-            <div id="usuarios" style="text-align: center;">
-                <div class="header">
-                    <h1>Usuários</h1>
-                    <p>Consulte e cadastre usuários</p>
-                    <form action="/usuarios" method="post">
-                        <input type="text" id="inputNome" name="inputNome" placeholder="Nome" required>
-                        <input type="email" id="inputEmail" name="inputEmail" placeholder="Email" required><br>
-                        <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
-                    </form>
-                </div>
-                <div class="table-container" style="overflow: auto; height: 350px;">
-                    <table id="usuarios-table" class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+        <!-- Usuários -->
+        <div class="section-container">
+            <div class="title-div">
+                <h2>Usuários</h2>
+                <p>Consulte e cadastre usuários</p>
+            </div>
+            <div class="form-div">
+                <form class="form-usuario" action="/usuarios" method="post">
+                    <input type="text" id="inputNome" name="inputNome" placeholder="Nome" required>
+                    <input type="email" id="inputEmail" name="inputEmail" placeholder="Email" required><br>
+                    <input class="btn-submit" type="submit" value="Cadastrar">
+                </form>
+            </div>
+            <div class="table-container">
+                <table id="usuarios-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
-    
+
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script>
         // Função para carregar dados do histórico
